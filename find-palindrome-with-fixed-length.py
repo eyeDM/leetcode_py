@@ -3,19 +3,8 @@
 from typing import List
 
 class Solution:
-    def __simplestCase(self, queries: List[int]) -> List[int]:
-        result = []
-
-        for i in queries:
-            if i > 9:
-                result.append(-1)
-            else:
-                result.append(i)
-
-        return result
-
     def __buildPalindrome(self, leftHalfSeed: int, withCenter: bool, i: int) -> int:
-        leftHalf = str(leftHalfSeed + i - 1)
+        leftHalf = str(leftHalfSeed + i)
 
         if withCenter:
             return int(
@@ -27,21 +16,28 @@ class Solution:
             )
 
     def kthPalindrome(self, queries: List[int], intLength: int) -> List[int]:
+        result = []
+
         if intLength == 1:
-            return self.__simplestCase(queries)
+            for i in queries:
+                if i > 9:
+                    result.append(-1)
+                else:
+                    result.append(i)
+
+            return result
 
         if intLength % 2:
             withCenter = True
-            maxIndex = 9 * 10 ** (intLength // 2)
+            leftHalfSeed = 10 ** (intLength // 2)
+            maxIndex = 9 * leftHalfSeed
         else:
             withCenter = False
-            maxIndex = 9 * 10 ** (intLength // 2 - 1)
+            leftHalfSeed = 10 ** (intLength // 2 - 1)
+            maxIndex = 9 * leftHalfSeed
 
-        leftHalfSeed = 1
-        while (leftHalfSeed < maxIndex / 10):
-            leftHalfSeed *= 10
+        leftHalfSeed -= 1
 
-        result = []
         cache = {}
         for j, i in enumerate(queries):
             if i > maxIndex:
@@ -56,7 +52,6 @@ class Solution:
                     cache[i] = j
 
         return result
-
 
 # print(
 #     Solution().kthPalindrome([1,2,3,4,5,90], 3)
